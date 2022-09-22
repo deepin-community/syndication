@@ -1,0 +1,8 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -90,3 +90,5 @@ install(FILES
+ feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+ 
+ kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
++
++include(/usr/share/pkg-kde-tools/cmake/DebianABIManager.cmake)

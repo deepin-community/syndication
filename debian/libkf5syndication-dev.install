@@ -1,0 +1,5 @@
+usr/include/KF5/Syndication/
+usr/include/KF5/syndication_version.h
+usr/lib/*/cmake/KF5Syndication/
+usr/lib/*/libKF5Syndication.so
+usr/lib/*/qt5/mkspecs/modules/qt_Syndication.pri
