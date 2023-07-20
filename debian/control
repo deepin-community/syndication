@@ -7,12 +7,12 @@ Uploaders: Aurélien COUDERC <coucouf@debian.org>,
 Build-Depends: cmake (>= 3.16~),
                debhelper-compat (= 13),
                doxygen (>= 1.8.13~),
-               extra-cmake-modules (>= 5.90.0~),
-               libkf5codecs-dev (>= 5.90.0~),
+               extra-cmake-modules (>= 5.103.0~),
+               libkf5codecs-dev (>= 5.103.0~),
                pkg-kde-tools (>> 0.15.15),
                qtbase5-dev (>= 5.15.2~),
                qttools5-dev (>= 5.11.0~),
-Standards-Version: 4.6.0
+Standards-Version: 4.6.2
 Homepage: https://invent.kde.org/frameworks/syndication
 Vcs-Browser: https://salsa.debian.org/qt-kde-team/kde/syndication
 Vcs-Git: https://salsa.debian.org/qt-kde-team/kde/syndication.git
@@ -31,13 +31,13 @@ Description: parser library for RSS and Atom feeds - development files
  not need to distinguish between feed formats.
  .
  This package contains the development files.
-Breaks: libkf5blog-dev (<< 4:17.08)
+Breaks: libkf5blog-dev (<< 4:17.08),
 
 Package: libkf5syndication-doc
 Section: doc
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}
+Depends: ${misc:Depends},
 Description: parser library for RSS and Atom feeds - documentation
  Syndication is a parser library for RSS and Atom feeds. It offers a unified,
  format-agnostic view on the parsed feed, so that the using application does
@@ -52,7 +52,7 @@ X-Debian-ABI: 1
 X-CMake-Target: KF5Syndication
 Architecture: any
 Multi-Arch: same
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends},
 Description: parser library for RSS and Atom feeds
  Syndication is a parser library for RSS and Atom feeds. It offers a unified,
  format-agnostic view on the parsed feed, so that the using application does

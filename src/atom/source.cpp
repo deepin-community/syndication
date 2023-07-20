@@ -36,15 +36,13 @@ Source::Source(const QDomElement &element)
 QList<Person> Source::authors() const
 {
     const QList<QDomElement> a = elementsByTagNameNS(atom1Namespace(), QStringLiteral("author"));
+
     QList<Person> list;
     list.reserve(a.count());
 
-    QList<QDomElement>::ConstIterator it = a.constBegin();
-    QList<QDomElement>::ConstIterator end = a.constEnd();
-
-    for (; it != end; ++it) {
-        list.append(Person(*it));
-    }
+    std::transform(a.cbegin(), a.cend(), std::back_inserter(list), [](const QDomElement &element) {
+        return Person(element);
+    });
 
     return list;
 }
@@ -55,12 +53,9 @@ QList<Person> Source::contributors() const
     QList<Person> list;
     list.reserve(a.count());
 
-    QList<QDomElement>::ConstIterator it = a.constBegin();
-    QList<QDomElement>::ConstIterator end = a.constEnd();
-
-    for (; it != end; ++it) {
-        list.append(Person(*it));
-    }
+    std::transform(a.cbegin(), a.cend(), std::back_inserter(list), [](const QDomElement &element) {
+        return Person(element);
+    });
 
     return list;
 }
@@ -71,12 +66,9 @@ QList<Category> Source::categories() const
     QList<Category> list;
     list.reserve(a.count());
 
-    QList<QDomElement>::ConstIterator it = a.constBegin();
-    QList<QDomElement>::ConstIterator end = a.constEnd();
-
-    for (; it != end; ++it) {
-        list.append(Category(*it));
-    }
+    std::transform(a.cbegin(), a.cend(), std::back_inserter(list), [](const QDomElement &element) {
+        return Category(element);
+    });
 
     return list;
 }
@@ -102,12 +94,9 @@ QList<Link> Source::links() const
     QList<Link> list;
     list.reserve(a.count());
 
-    QList<QDomElement>::ConstIterator it = a.constBegin();
-    QList<QDomElement>::ConstIterator end = a.constEnd();
-
-    for (; it != end; ++it) {
-        list.append(Link(*it));
-    }
+    std::transform(a.cbegin(), a.cend(), std::back_inserter(list), [](const QDomElement &element) {
+        return Link(element);
+    });
 
     return list;
 }
@@ -169,32 +158,28 @@ QString Source::debugInfo() const
         info += QLatin1String("updated: #") + dupdated + QLatin1String("#\n");
     }
 
-    QList<Link> dlinks = links();
-    QList<Link>::ConstIterator endlinks = dlinks.constEnd();
-    for (QList<Link>::ConstIterator it = dlinks.constBegin(); it != endlinks; ++it) {
-        info += (*it).debugInfo();
+    const QList<Link> dlinks = links();
+    for (const auto &link : dlinks) {
+        info += link.debugInfo();
     }
 
-    QList<Category> dcats = categories();
-    QList<Category>::ConstIterator endcats = dcats.constEnd();
-    for (QList<Category>::ConstIterator it = dcats.constBegin(); it != endcats; ++it) {
-        info += (*it).debugInfo();
+    const QList<Category> dcats = categories();
+    for (const auto &cat : dcats) {
+        info += cat.debugInfo();
     }
 
     info += QLatin1String("### Authors: ###################\n");
 
-    QList<Person> dauthors = authors();
-    QList<Person>::ConstIterator endauthors = dauthors.constEnd();
-    for (QList<Person>::ConstIterator it = dauthors.constBegin(); it != endauthors; ++it) {
-        info += (*it).debugInfo();
+    const QList<Person> dauthors = authors();
+    for (const auto &author : dauthors) {
+        info += author.debugInfo();
     }
 
     info += QLatin1String("### Contributors: ###################\n");
 
-    QList<Person> dcontri = contributors();
-    QList<Person>::ConstIterator endcontri = dcontri.constEnd();
-    for (QList<Person>::ConstIterator it = dcontri.constBegin(); it != endcontri; ++it) {
-        info += (*it).debugInfo();
+    const QList<Person> dcontri = contributors();
+    for (const auto &person : dcontri) {
+        info += person.debugInfo();
     }
 
     info += QLatin1String("### Source end ################\n");
