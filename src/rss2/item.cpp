@@ -130,16 +130,15 @@ QString Item::content() const
 
 QList<Category> Item::categories() const
 {
-    QList<QDomElement> cats = elementsByTagNameNS(QString(), QStringLiteral("category"));
+    const QList<QDomElement> cats = elementsByTagNameNS(QString(), QStringLiteral("category"));
 
     QList<Category> categories;
     categories.reserve(cats.count());
 
-    QList<QDomElement>::ConstIterator it = cats.constBegin();
-    const QList<QDomElement>::ConstIterator end(cats.constEnd());
-    for (; it != end; ++it) {
-        categories.append(Category(*it));
-    }
+    std::transform(cats.cbegin(), cats.cend(), std::back_inserter(categories), [](const QDomElement &element) {
+        return Category(element);
+    });
+
     return categories;
 }
 
@@ -161,16 +160,15 @@ QString Item::author() const
 
 QList<Enclosure> Item::enclosures() const
 {
-    QList<QDomElement> encs = elementsByTagNameNS(QString(), QStringLiteral("enclosure"));
+    const QList<QDomElement> encs = elementsByTagNameNS(QString(), QStringLiteral("enclosure"));
 
     QList<Enclosure> enclosures;
     enclosures.reserve(encs.count());
 
-    QList<QDomElement>::ConstIterator it = encs.constBegin();
-    QList<QDomElement>::ConstIterator end(encs.constEnd());
-    for (; it != end; ++it) {
-        enclosures.append(Enclosure(*it));
-    }
+    std::transform(encs.cbegin(), encs.cend(), std::back_inserter(enclosures), [](const QDomElement &element) {
+        return Enclosure(element);
+    });
+
     return enclosures;
 }
 
@@ -257,15 +255,14 @@ QString Item::debugInfo() const
         info += source().debugInfo();
     }
 
-    QList<Category> cats = categories();
-    const QList<Category>::ConstIterator endCategories(cats.constEnd());
-    for (QList<Category>::ConstIterator it = cats.constBegin(); it != endCategories; ++it) {
-        info += (*it).debugInfo();
+    const QList<Category> cats = categories();
+    for (const auto &c : cats) {
+        info += c.debugInfo();
     }
-    QList<Enclosure> encs = enclosures();
-    const QList<Enclosure>::ConstIterator endEnclosures(encs.constEnd());
-    for (QList<Enclosure>::ConstIterator it = encs.constBegin(); it != endEnclosures; ++it) {
-        info += (*it).debugInfo();
+
+    const QList<Enclosure> encs = enclosures();
+    for (const auto &e : encs) {
+        info += e.debugInfo();
     }
 
     info += QLatin1String("### Item end ################\n");

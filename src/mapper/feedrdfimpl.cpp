@@ -35,16 +35,14 @@ Syndication::SpecificDocumentPtr FeedRDFImpl::specificDocument() const
 
 QList<Syndication::ItemPtr> FeedRDFImpl::items() const
 {
+    const QList<Syndication::RDF::Item> entries = m_doc->items();
+
     QList<ItemPtr> items;
-    QList<Syndication::RDF::Item> entries = m_doc->items();
-    QList<Syndication::RDF::Item>::ConstIterator it = entries.constBegin();
-    QList<Syndication::RDF::Item>::ConstIterator end = entries.constEnd();
     items.reserve(entries.count());
 
-    for (; it != end; ++it) {
-        ItemRDFImplPtr item(new ItemRDFImpl(*it));
-        items.append(item);
-    }
+    std::transform(entries.cbegin(), entries.cend(), std::back_inserter(items), [](const Syndication::RDF::Item &entry) {
+        return ItemRDFImplPtr(new ItemRDFImpl(entry));
+    });
 
     return items;
 }
@@ -72,15 +70,13 @@ QString FeedRDFImpl::description() const
 
 QList<PersonPtr> FeedRDFImpl::authors() const
 {
+    const QStringList people = m_doc->dc().creators() + m_doc->dc().contributors();
+
     QList<PersonPtr> list;
+    list.reserve(people.size());
 
-    QStringList people = m_doc->dc().creators();
-    people += m_doc->dc().contributors();
-    QStringList::ConstIterator it = people.constBegin();
-    QStringList::ConstIterator end = people.constEnd();
-
-    for (; it != end; ++it) {
-        PersonPtr ptr = personFromString(*it);
+    for (const auto &person : people) {
+        PersonPtr ptr = personFromString(person);
         if (!ptr->isNull()) {
             list.append(ptr);
         }
